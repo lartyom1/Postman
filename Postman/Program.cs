@@ -11,8 +11,8 @@ namespace Postman
 
             postman.UserRepository = new UserRepository();
 
-            postman.UserRepository.AddUser(new User(0, (int)SendMethod.SMS, "8911"));
-            postman.UserRepository.AddUser(new User(1, (int)SendMethod.Email, "@mail.com"));
+            postman.UserRepository.AddUser(new User(0, (int)DeliveryMethod.SMS, "8911"));
+            postman.UserRepository.AddUser(new User(1, (int)DeliveryMethod.Email, "@mail.com"));
             postman.UserRepository.AddUser(new User(1, 2, "@mail.com"));//non existent sender
             //etc
 

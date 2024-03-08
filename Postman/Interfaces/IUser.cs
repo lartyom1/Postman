@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Postman.Interfaces
 {
-    public enum SendMethod
+    public enum DeliveryMethod
     {
         SMS,
         Email

@@ -1,5 +1,6 @@
 ﻿using Postman.Classes;
 using Postman.Interfaces;
+using Postman.SendStrategy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,11 @@ namespace Postman
 {
     public class Postman
     {
+        private IMultiSender multiSender = new MultiSender();
         public UserRepository UserRepository { get; set; }
 
         private const int maxSms = 5;
-        private const int maaxEmail = 5;
+        private const int maxEmail = 5;
 
         private const int maxSender = 7;
 
@@ -35,8 +37,9 @@ namespace Postman
                 var user = UserRepository.Get(message.UserId);
                 if (user != null)
                 {
+                    bool sent = multiSender.Send((DeliveryMethod)user.DeliveryMethod, message.MessageText, user.Address);
 
-                    //strategy here
+                    if (!sent) FailedMessages.Append(message);//smth else happened
                     //limiter here
                     //?semaphore
                 }
