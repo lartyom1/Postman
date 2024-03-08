@@ -9,8 +9,13 @@ namespace Postman.Classes
 {
     public class Message : IMessage
     {
-        public int UserId => throw new NotImplementedException();
+        public int UserId { get; set; }//=> throw new NotImplementedException();
+        public string MessageText { get; set; }//=> throw new NotImplementedException();
 
-        public string MessageText => throw new NotImplementedException();
+        public Message(int uid, string message)
+        {
+            UserId = uid;
+            MessageText = message;
+        }
     }
 }

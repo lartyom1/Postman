@@ -9,10 +9,17 @@ namespace Postman.Classes
 {
     public class User : IUser
     {
-        public string Id => throw new NotImplementedException();
+        public string Id { get; set; }//=> throw new NotImplementedException();
 
-        public int DeliveryMethod => throw new NotImplementedException();
+        public int DeliveryMethod { get; set; }//=> throw new NotImplementedException();
 
-        public string Address => throw new NotImplementedException();
+        public string Address { get; set; } //=> throw new NotImplementedException();
+
+        public User(int id, int deliveryMethod, string address)
+        {
+            Id = Id;
+            DeliveryMethod = deliveryMethod;
+            Address = address;
+        }
     }
 }

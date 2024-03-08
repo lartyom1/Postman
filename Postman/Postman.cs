@@ -22,6 +22,9 @@ namespace Postman
         /// <param name="messages"> коллекция сообщений </param>
         public void Send(IEnumerable<IMessage> messages)
         {
+        
+        
+        
         }
     }
 }
