@@ -9,22 +9,28 @@ namespace Postman.SendStrategy
 {
     internal class MultiSender : IMultiSender
     {
+        private SemaphoreSlim multiSemaphore = new SemaphoreSlim(5, 5);
+        private readonly Dictionary<DeliveryMethod, ISender> senders = new Dictionary<DeliveryMethod, ISender>()
+        {
+            { DeliveryMethod.SMS, new SmsStrategy()},
+            { DeliveryMethod.Email, new EmailStrategy()}
+        };
 
-        SemaphoreSlim multiSemaphore = new SemaphoreSlim(0, 5);
-
-        //SemaphoreSlim smsSemaphore = new SemaphoreSlim(0, 3);
-        //SemaphoreSlim emailSemaphore = new SemaphoreSlim(0, 3);
         public bool Send(DeliveryMethod sendMethod, string message, string adress)
         {
+            bool state = false;
+            Console.WriteLine($"msg: {message} to: {adress} qued");
+
             multiSemaphore.Wait();
-            var state = false;
+            Console.WriteLine($"msg: {message} to: {adress} sending");
             switch (sendMethod)
             {
-                case DeliveryMethod.SMS: state = new SmsStrategy().Send(sendMethod, message, adress); break;
-                case DeliveryMethod.Email: state = new EmailStrategy().Send(sendMethod, message, adress); break;
+                case DeliveryMethod.SMS: state = senders[sendMethod].Send(message, adress); break;
+                case DeliveryMethod.Email: state = senders[sendMethod].Send(message, adress); break;
                 default: break;
             }
             multiSemaphore.Release();
+
             return state;
         }
     }

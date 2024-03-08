@@ -14,15 +14,16 @@ namespace Postman
         private IMultiSender multiSender = new MultiSender();
         public UserRepository UserRepository { get; set; }
 
-        private const int maxSms = 5;
-        private const int maxEmail = 5;
+        public Postman()
+        {
+            FailedMessages = new List<Message>();
+        }
 
-        private const int maxSender = 7;
 
         /// <summary>
         /// Список, куда следует поместить все сообщения, которые не удалось доставить
         /// </summary>
-        public IEnumerable<IMessage> FailedMessages;
+        public IEnumerable<IMessage> FailedMessages; //i do NOT change it
         /// <summary>
         /// Отправляет сообщения из списка messages пользователям
         /// Сообщение отправляется методом, указанным в записи пользователя
@@ -32,24 +33,38 @@ namespace Postman
         /// <param name="messages"> коллекция сообщений </param>
         public void Send(IEnumerable<IMessage> messages)
         {
+            List<Task> tasks = new List<Task>();
             foreach (var message in messages)
             {
-                var user = UserRepository.Get(message.UserId);
-                if (user != null)
+                Task t = Task.Run(()=>
                 {
-                    bool sent = multiSender.Send((DeliveryMethod)user.DeliveryMethod, message.MessageText, user.Address);
+                    var user = UserRepository.Get(message.UserId);
+                    if (user != null)
+                    {
+                        bool sent = multiSender.Send((DeliveryMethod)user.DeliveryMethod, message.MessageText, user.Address);
 
-                    if (!sent) FailedMessages.Append(message);//smth else happened
-                    //limiter here
-                    //?semaphore
-                }
-                else
-                {
-                    FailedMessages.Append(message);//non existent user
-                }
-
+                        if (!sent)
+                        {
+                            FailedMessages = FailedMessages.Append(message);//smth else happened
+                            Console.WriteLine($"msg: {message.MessageText} to: {user.Address} failed");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"msg: {message.MessageText} to: {user.Address} sent");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"msg: {message.MessageText} to: unknown user failed");
+                        FailedMessages = FailedMessages.Append(message);//non existent user
+                    }
+                    //Thread.Sleep(1000);//debug
+                });
+                //t.Wait();//debug
+                tasks.Add(t);
             }
 
+            Task.WaitAll(tasks.ToArray());//i want to see results
         }
     }
 }
