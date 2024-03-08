@@ -10,17 +10,25 @@ namespace Postman.Classes
     public class UserRepository : IUserRepository
     {
 
-        private List<User> _user = new List<User>();
-        public IUser Get(int userId)
-        {
-            throw new NotImplementedException();
-        }
+        private Dictionary<string, User> _user = new Dictionary<string, User>();
 
-        public void AddUser(User user)
+        //? why would you ever use string id for user and get by int id
+        public IUser Get(int userId) => _user.ContainsKey(userId.ToString()) ?
+            _user[userId.ToString()] : null;
+
+        public bool AddUser(User user)
         {
-            _user.Add(user);        
+            if (!_user.ContainsKey(user.Id))
+            {
+                _user.Add(user.Id, user);
+                return true;
+            }
+
+            return false;
         }
 
         public void DeleteUser() => throw new NotImplementedException();
+        public void UpdateUser() => throw new NotImplementedException();
+        //etc
     }
 }
