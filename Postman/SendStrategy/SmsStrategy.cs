@@ -1,4 +1,5 @@
 ﻿using Postman.Classes.Send;
+using Postman.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace Postman.SendStrategy
 {
     internal class SmsStrategy : IMultiSender
     {
-        public bool Send(string message, string adress) => new SendEmail().Send(message, adress);
-        
+        public bool Send(DeliveryMethod sendMethod, string message, string adress) 
+            => new SendEmail().Send(message, adress);
+ 
     }
 }

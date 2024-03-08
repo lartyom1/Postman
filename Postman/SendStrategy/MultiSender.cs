@@ -9,14 +9,23 @@ namespace Postman.SendStrategy
 {
     internal class MultiSender : IMultiSender
     {
+
+        SemaphoreSlim multiSemaphore = new SemaphoreSlim(0, 5);
+
+        //SemaphoreSlim smsSemaphore = new SemaphoreSlim(0, 3);
+        //SemaphoreSlim emailSemaphore = new SemaphoreSlim(0, 3);
         public bool Send(DeliveryMethod sendMethod, string message, string adress)
         {
+            multiSemaphore.Wait();
+            var state = false;
             switch (sendMethod)
             {
-                case DeliveryMethod.SMS:  return new SmsStrategy().Send(message, adress);
-                case DeliveryMethod.Email: return new EmailStrategy().Send(message, adress);
-                default: return false;
+                case DeliveryMethod.SMS: state = new SmsStrategy().Send(sendMethod, message, adress); break;
+                case DeliveryMethod.Email: state = new EmailStrategy().Send(sendMethod, message, adress); break;
+                default: break;
             }
+            multiSemaphore.Release();
+            return state;
         }
     }
 }
