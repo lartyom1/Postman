@@ -1,4 +1,5 @@
 ﻿using Postman.Classes;
+using Postman.Interfaces;
 
 namespace Postman
 {
@@ -7,11 +8,12 @@ namespace Postman
         public void Main()
         {
             Postman postman = new Postman();
-            UserRepository userRepository = new UserRepository();
 
-            userRepository.AddUser(new User(0, 0, "8911"));
-            userRepository.AddUser(new User(1, 1, "@mail.com"));
-            userRepository.AddUser(new User(1, 2, "@mail.com"));//non existent sender
+            postman.UserRepository = new UserRepository();
+
+            postman.UserRepository.AddUser(new User(0, (int)SendMethod.SMS, "8911"));
+            postman.UserRepository.AddUser(new User(1, (int)SendMethod.Email, "@mail.com"));
+            postman.UserRepository.AddUser(new User(1, 2, "@mail.com"));//non existent sender
             //etc
 
             List<Message> messages = new List<Message>()

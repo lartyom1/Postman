@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Postman.Interfaces
 {
+    public enum SendMethod
+    {
+        SMS,
+        Email
+    }
+
     /// <summary>
     /// Запись пользователя, которому будет отправляться сообщение
     /// </summary>

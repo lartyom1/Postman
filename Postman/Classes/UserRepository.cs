@@ -10,7 +10,7 @@ namespace Postman.Classes
     public class UserRepository : IUserRepository
     {
 
-        private Dictionary<string, User> _user = new Dictionary<string, User>();
+        private Dictionary<string, User> _user = new Dictionary<string, User>();//int id would be faster
 
         //? why would you ever use string id for user and get by int id
         public IUser Get(int userId) => _user.ContainsKey(userId.ToString()) ?

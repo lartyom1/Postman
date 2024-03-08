@@ -1,4 +1,5 @@
-﻿using Postman.Interfaces;
+﻿using Postman.Classes;
+using Postman.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace Postman
 {
     public class Postman
     {
+        public UserRepository UserRepository { get; set; }
+
+        private const int maxSms = 5;
+        private const int maaxEmail = 5;
+
+        private const int maxSender = 7;
+
         /// <summary>
         /// Список, куда следует поместить все сообщения, которые не удалось доставить
         /// </summary>
@@ -22,9 +30,23 @@ namespace Postman
         /// <param name="messages"> коллекция сообщений </param>
         public void Send(IEnumerable<IMessage> messages)
         {
-        
-        
-        
+            foreach (var message in messages)
+            {
+                var user = UserRepository.Get(message.UserId);
+                if (user != null)
+                {
+
+                    //strategy here
+                    //limiter here
+                    //?semaphore
+                }
+                else
+                {
+                    FailedMessages.Append(message);//non existent user
+                }
+
+            }
+
         }
     }
 }
