@@ -1,15 +1,20 @@
 ﻿using Postman.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Postman.SendStrategy
 {
+    /// <summary>
+    /// Стратегия для отправки email
+    /// </summary>
     public class EmailStrategy : ISender
     {
         private SemaphoreSlim emailSemaphore = new SemaphoreSlim(3, 3);
+        
+        /// <summary>
+        /// Отправка email
+        /// </summary>
+        /// <param name="message"> Текст сообщения </param>
+        /// <param name="address"> Адрес </param>
+        /// <returns> false в случае ошибки </returns>
         public bool Send(string message, string address)
         {
             emailSemaphore.Wait();

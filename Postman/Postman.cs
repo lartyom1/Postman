@@ -1,20 +1,26 @@
 ﻿using Postman.Classes;
 using Postman.Interfaces;
 using Postman.SendStrategy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Postman
 {
+    /// <summary>
+    /// Отправляет сообщения из списка messages пользователям
+    /// Сообщение отправляется методом, указанным в записи пользователя
+    /// по адресу, указанным в записи пользователя
+    /// В случае, если сообщение не удалось доставить, помещает его в FailedMessages
+    /// </summary>
     public class Postman
     {
         private IMultiSender multiSender = new MultiSender();
         private UserRepository UserRepository = new UserRepository();
 
-        public void AddUser(User user) => this.UserRepository.AddUser(user);
+        /// <summary>
+        /// Добавление пользователя в репозиторий Postman
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns> false если пользователь уже есть </returns>
+        public bool AddUser(User user) => this.UserRepository.AddUser(user);
 
         /// <summary>
         /// Список, куда следует поместить все сообщения, которые не удалось доставить
@@ -29,15 +35,15 @@ namespace Postman
         /// <param name="messages"> коллекция сообщений </param>
         public void Send(IEnumerable<IMessage> messages)
         {
-            List<Task> tasks = new List<Task>();
+            var tasks = new List<Task>();
             foreach (var message in messages)
             {
-                Task t = Task.Run(() =>
+                var t = Task.Run(() =>
                 {
                     var user = UserRepository.Get(message.UserId);
                     if (user != null)
                     {
-                        bool sent = multiSender.Send((DeliveryMethod)user.DeliveryMethod, message.MessageText, user.Address);
+                        var sent = multiSender.Send((DeliveryMethod)user.DeliveryMethod, message.MessageText, user.Address);
 
                         if (!sent)
                         {
@@ -59,7 +65,7 @@ namespace Postman
                 tasks.Add(t);
             }
 
-            Task.WaitAll(tasks.ToArray());//i want to see results
+            Task.WaitAll(tasks.ToArray());
         }
     }
 }

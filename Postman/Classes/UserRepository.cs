@@ -1,21 +1,18 @@
 ﻿using Postman.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Postman.Classes
 {
     public class UserRepository : IUserRepository
     {
-
-        private Dictionary<string, User> _user = new Dictionary<string, User>();//int id would be faster
-
-        //? why would you ever use string id for user and get by int id
+        private readonly Dictionary<string, User> _user = new Dictionary<string, User>();
         public IUser Get(int userId) => _user.ContainsKey(userId.ToString()) ?
             _user[userId.ToString()] : null;
 
+        /// <summary>
+        /// Добавление пользователя в репозиторий
+        /// </summary>
+        /// <param name="user"> Пользователь </param>
+        /// <returns> Результат добавления, false если пользователь уже есть </returns>
         public bool AddUser(User user)
         {
             if (!_user.ContainsKey(user.Id))
@@ -26,7 +23,6 @@ namespace Postman.Classes
 
             return false;
         }
-
         public void DeleteUser() => throw new NotImplementedException();
         public void UpdateUser() => throw new NotImplementedException();
         //etc

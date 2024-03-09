@@ -1,16 +1,21 @@
 ﻿
 using Postman.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Postman.SendStrategy
 {
-    internal class SmsStrategy : ISender
+    /// <summary>
+    /// Стратегия отправки sms
+    /// </summary>
+    public class SmsStrategy : ISender
     {
         private SemaphoreSlim smsSemaphore = new SemaphoreSlim(3, 3);
+
+        /// <summary>
+        /// Отправка sms
+        /// </summary>
+        /// <param name="message"> Текст сообщения </param>
+        /// <param name="address"> Адрес </param>
+        /// <returns></returns>
         public bool Send(string message, string address)
         {
             smsSemaphore.Wait();

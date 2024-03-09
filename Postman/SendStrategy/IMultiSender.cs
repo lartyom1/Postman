@@ -1,14 +1,16 @@
 ﻿using Postman.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Postman.SendStrategy
 {
     internal interface IMultiSender
     {
+        /// <summary>
+        /// Отправка сообщения
+        /// </summary>
+        /// <param name="sendMethod"> Метод отправки </param>
+        /// <param name="message"> Текст сообщения </param>
+        /// <param name="adress"> Адрес </param>
+        /// <returns> false в случае ошибки </returns>
         public bool Send(DeliveryMethod sendMethod, string message, string adress);
     }
 }

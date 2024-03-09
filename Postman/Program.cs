@@ -7,14 +7,14 @@ namespace Postman
     {
         public static void Main()
         {
-            Postman postman = new Postman();
+            var postman = new Postman();
 
             postman.AddUser(new User("0", (int)DeliveryMethod.SMS, "8911"));
             postman.AddUser(new User("1", (int)DeliveryMethod.Email, "@mail.com"));
             postman.AddUser(new User("2", 2, "@mail.com"));//non existent sender
             //etc
 
-            List<Message> messages = new List<Message>()
+            var messages = new List<Message>()
             {
                 new Message(0, "hello"),
 
@@ -40,10 +40,7 @@ namespace Postman
             };
             //etc
 
-
             postman.Send(messages);
         }
-
-
     }
 }
