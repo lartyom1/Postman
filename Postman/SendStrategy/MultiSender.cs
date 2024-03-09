@@ -9,7 +9,7 @@ namespace Postman.SendStrategy
 {
     internal class MultiSender : IMultiSender
     {
-        private SemaphoreSlim multiSemaphore = new SemaphoreSlim(5, 5);
+        private SemaphoreSlim multiSemaphore = new SemaphoreSlim(4, 4);
         private readonly Dictionary<DeliveryMethod, ISender> senders = new Dictionary<DeliveryMethod, ISender>()
         {
             { DeliveryMethod.SMS, new SmsStrategy()},
@@ -18,17 +18,15 @@ namespace Postman.SendStrategy
 
         public bool Send(DeliveryMethod sendMethod, string message, string adress)
         {
-            bool state = false;
+            var state = false;
             Console.WriteLine($"msg: {message} to: {adress} qued");
 
             multiSemaphore.Wait();
-            Console.WriteLine($"msg: {message} to: {adress} sending");
-            switch (sendMethod)
+            //Console.WriteLine($"msg: {message} to: {adress} sending");
+            if (senders.ContainsKey(sendMethod))
             {
-                case DeliveryMethod.SMS: state = senders[sendMethod].Send(message, adress); break;
-                case DeliveryMethod.Email: state = senders[sendMethod].Send(message, adress); break;
-                default: break;
-            }
+                state = senders[sendMethod].Send(message, adress);
+            }            
             multiSemaphore.Release();
 
             return state;

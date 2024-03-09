@@ -15,6 +15,7 @@ namespace Postman.SendStrategy
             emailSemaphore.Wait();
             try
             {
+                Thread.Sleep(1500);
                 //some possibly faulty send email logic
                 Console.WriteLine($"sending email: {message} to: {address}");
                 return true;

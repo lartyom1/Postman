@@ -12,18 +12,14 @@ namespace Postman
     public class Postman
     {
         private IMultiSender multiSender = new MultiSender();
-        public UserRepository UserRepository { get; set; }
+        private UserRepository UserRepository = new UserRepository();
 
-        public Postman()
-        {
-            FailedMessages = new List<Message>();
-        }
-
+        public void AddUser(User user) => this.UserRepository.AddUser(user);
 
         /// <summary>
         /// Список, куда следует поместить все сообщения, которые не удалось доставить
         /// </summary>
-        public IEnumerable<IMessage> FailedMessages; //i do NOT change it
+        public IEnumerable<IMessage> FailedMessages = new List<Message>();
         /// <summary>
         /// Отправляет сообщения из списка messages пользователям
         /// Сообщение отправляется методом, указанным в записи пользователя
@@ -36,7 +32,7 @@ namespace Postman
             List<Task> tasks = new List<Task>();
             foreach (var message in messages)
             {
-                Task t = Task.Run(()=>
+                Task t = Task.Run(() =>
                 {
                     var user = UserRepository.Get(message.UserId);
                     if (user != null)
@@ -50,7 +46,7 @@ namespace Postman
                         }
                         else
                         {
-                            Console.WriteLine($"msg: {message.MessageText} to: {user.Address} sent");
+                            Console.WriteLine($"msg: {message.MessageText} to: {user.Address} sent at: {DateTime.Now}");
                         }
                     }
                     else
@@ -58,9 +54,8 @@ namespace Postman
                         Console.WriteLine($"msg: {message.MessageText} to: unknown user failed");
                         FailedMessages = FailedMessages.Append(message);//non existent user
                     }
-                    //Thread.Sleep(1000);//debug
                 });
-                //t.Wait();//debug
+                //t.Wait();//make synchronous
                 tasks.Add(t);
             }
 
