@@ -27,7 +27,7 @@ namespace Postman.SendStrategy
             Console.WriteLine($"msg: {message} to: {adress} qued");
 
             multiSemaphore.Wait();
-            if (senders.ContainsKey(sendMethod))
+            if (senders.ContainsKey(sendMethod))//TRYGETVALUE
             {
                 state = senders[sendMethod].Send(message, adress);
             }            
